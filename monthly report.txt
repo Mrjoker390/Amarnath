@@ -1,0 +1,63 @@
+function AMAR() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet(); // Access the active spreadsheet
+  var amar = ss.getSheets(); // Get all sheets in the spreadsheet
+  
+  // Get the names of all sheets except "FINAL REPORT"
+  var sheetNames = amar
+    .map(function(sheet) {
+      return sheet.getName(); // Get the name of each sheet
+    })
+    .filter(function(name) {
+      return name !== "FINAL REPORT"; // Exclude the sheet named "FINAL REPORT"
+    });
+  
+  // Sort the sheet names in ascending (alphabetical) order
+  sheetNames.sort();
+  
+  // Check if "FINAL REPORT" sheet exists and delete if it does
+  var finalReportSheetName = "FINAL REPORT";
+  var finalReportSheet = ss.getSheetByName(finalReportSheetName);
+  if (finalReportSheet) {
+    ss.deleteSheet(finalReportSheet); // Delete the existing "FINAL REPORT" sheet
+    Logger.log("Deleted existing sheet: " + finalReportSheetName);
+  }
+  
+  // Create a new "FINAL REPORT" sheet
+  var currentSheet = ss.insertSheet(finalReportSheetName);
+  Logger.log("Created new sheet: " + finalReportSheetName);
+  
+  // Clear previous content in columns A through H (optional)
+  currentSheet.getRange("A:H").clearContent();
+  
+  // Set headers in row 1
+  var headers = ["Caringbah","Jobs", "Drawing", "Qty", "Bend", "L.M", "L.G", "Mistake", "Mailed"];
+  currentSheet.getRange("A1:I1").setValues([headers]);
+  
+  // Write the sorted sheet names into column A starting from row 2
+  for (var i = 0; i < sheetNames.length; i++) {
+    var sheetName = sheetNames[i];
+    currentSheet.getRange(i + 2, 1).setValue(sheetName); // Write each sheet name into column A
+    
+    var sheet = ss.getSheetByName(sheetName);
+    
+     // Get values from C3:H4
+     var e4 = sheet.getRange("E4").getValue();
+     var e3 = sheet.getRange("E3").getValue();
+     var d3 = sheet.getRange("D3").getValue();
+     var c3 = sheet.getRange("C3").getValue();
+     var g3 = sheet.getRange("G3").getValue();
+     var f3 = sheet.getRange("F3").getValue();
+     var h3 = sheet.getRange("H3").getValue();
+     var h4 = sheet.getRange("H4").getValue();
+    
+    // Format the values correctly to fit the destination range
+    var formattedValues = [
+      [e4, e3, d3, c3, g3, f3, h3, h4]
+    ];
+    
+    // Write the values into columns B to H of the "FINAL REPORT" sheet
+    currentSheet.getRange(i + 2, 2, 1, 8).setValues(formattedValues);
+  }
+  
+  Logger.log("Sheet names and values copied successfully.");
+}

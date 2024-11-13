@@ -1,0 +1,53 @@
+function ClearValue() {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  
+  // Get the number from cell O1
+  var searchValue = sheet.getRange('P2').getValue();
+  if (searchValue && valueToCopyK3 !==0 && valueToCopyL3!==0 && valueToCopyM3!==0.000){ //&& //valueToCopyO3!==0){
+  // Get the value from cell K3,L3,M3,N3,O3
+
+    var valueToCopyK3 = sheet.getRange('K3').getValue();
+    var valueToCopyL3 = sheet.getRange('L3').getValue();
+    var valueToCopyM3 = sheet.getRange('M3').getValue();
+    var valueToCopyN3 = sheet.getRange('N3').getValue();
+    var valueToCopyO3 = sheet.getRange('O3').getValue();
+    var p2=sheet.getRange('P2').getValue();
+  
+  // Get all values from column B
+    var columnBValues = sheet.getRange('B:B').getValues();
+  
+  // Iterate through column B to find the matching number
+    for (var i = 0; i < columnBValues.length; i++) {
+      if (columnBValues[i][0] == searchValue) {
+        var rowIndex = i+1;
+        //COPY THE VALUE IN K3,L3,M3,N3,O3
+        sheet.getRange(rowIndex,3).setValue(valueToCopyK3);
+        sheet.getRange(rowIndex,4).setValue(valueToCopyL3);
+        sheet.getRange(rowIndex,6).setValue(valueToCopyM3);
+        sheet.getRange(rowIndex,7).setValue(valueToCopyN3);
+        sheet.getRange(rowIndex,5).setValue(valueToCopyO3);
+        sheet.getRange('AF2').setValue(p2);
+
+
+        break;  // Exit the loop once the value is found and pasted
+      }
+    }
+
+  //CLEAR ORDER ID
+    sheet.getRange('P2').clearContent();
+  
+  
+  // Existing clearValue functionality (if needed)
+  var ls = sheet.getLastRow();
+  var nr = ls + 1;
+  var startRow = 6;
+  var numRows = ls - startRow + 1;
+  var numColumns = 5;
+
+  ///TIMER AF2 0 IN 5 SEC
+  Utilities.sleep(5000);
+  sheet.getRange('AF2').setValue(" ");
+
+  sheet.getRange(startRow, 15, numRows, numColumns).clearContent();
+}
+}
